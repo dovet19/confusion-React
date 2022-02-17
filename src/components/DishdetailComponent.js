@@ -40,7 +40,12 @@ class CommentForm extends Component {
 
   handleSubmit(values) {
     this.toggleModal();
-    alert("Current State is: " + JSON.stringify(values));
+    this.props.addComment(
+      this.props.dishId,
+      values.rating,
+      values.author,
+      values.comment
+    );
   }
 
   render() {
@@ -57,6 +62,7 @@ class CommentForm extends Component {
                 <Label htmlFor="rating">Rating</Label>
                 <Control.select
                   model=".rating"
+                  id="rating"
                   name="rating"
                   className="form-control">
                   <option>1</option>
@@ -92,11 +98,11 @@ class CommentForm extends Component {
                 />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor="message">Comment</Label>
+                <Label htmlFor="comment">Comment</Label>
                 <Control.textarea
-                  model=".message"
-                  id="message"
-                  name="message"
+                  model=".comment"
+                  id="comment"
+                  name="comment"
                   rows="6"
                   className="form-control"
                 />
@@ -130,7 +136,7 @@ function RenderDish({ dish }) {
   else return <div></div>;
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
   if (comments == null) return <div></div>;
 
   return (
@@ -153,7 +159,7 @@ function RenderComments({ comments }) {
           );
         })}
       </ul>
-      <CommentForm />
+      <CommentForm dishId={dishId} addComment={addComment} />
     </div>
   );
 }
@@ -178,7 +184,11 @@ const DishDetail = (props) => {
       </div>
       <div className="row">
         <RenderDish dish={props.dish} />
-        <RenderComments comments={props.comments} />
+        <RenderComments
+          comments={props.comments}
+          addComment={props.addComment}
+          dishId={props.dish.id}
+        />
       </div>
     </div>
   );
